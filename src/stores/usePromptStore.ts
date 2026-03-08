@@ -2,6 +2,27 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { SelectedTag, Preset } from '../types'
 
+type PersistedState = {
+  selectedTags: SelectedTag[]
+  negativeTags: SelectedTag[]
+  presets: Preset[]
+}
+
+export function migratePersistedState(
+  persisted: unknown,
+  version: number
+): PersistedState {
+  if (version === 0) {
+    const old = (persisted ?? {}) as Record<string, unknown>
+    return {
+      selectedTags: Array.isArray(old.selectedTags) ? old.selectedTags : [],
+      negativeTags: Array.isArray(old.negativeTags) ? old.negativeTags : [],
+      presets: Array.isArray(old.presets) ? old.presets : [],
+    }
+  }
+  return persisted as PersistedState
+}
+
 interface PromptStore {
   // State
   selectedTags: SelectedTag[]
@@ -69,15 +90,21 @@ export const usePromptStore = create<PromptStore>()(
           negativeTags: s.negativeTags.filter((t) => t.tagId !== tagId),
         })),
 
-      moveToNegative: (tagId) => {
-        get().removeTag(tagId)
-        get().addNegativeTag(tagId)
-      },
+      moveToNegative: (tagId) =>
+        set((s) => ({
+          selectedTags: s.selectedTags.filter((t) => t.tagId !== tagId),
+          negativeTags: s.negativeTags.some((t) => t.tagId === tagId)
+            ? s.negativeTags
+            : [...s.negativeTags, { tagId }],
+        })),
 
-      moveToPositive: (tagId) => {
-        get().removeNegativeTag(tagId)
-        get().addTag(tagId)
-      },
+      moveToPositive: (tagId) =>
+        set((s) => ({
+          negativeTags: s.negativeTags.filter((t) => t.tagId !== tagId),
+          selectedTags: s.selectedTags.some((t) => t.tagId === tagId)
+            ? s.selectedTags
+            : [...s.selectedTags, { tagId }],
+        })),
 
       setWeight: (tagId, weight) =>
         set((s) => ({
@@ -121,6 +148,8 @@ export const usePromptStore = create<PromptStore>()(
     }),
     {
       name: 'nekoPrompt:workspace',
+      version: 1,
+      migrate: migratePersistedState,
       partialize: (state) => ({
         selectedTags: state.selectedTags,
         negativeTags: state.negativeTags,
