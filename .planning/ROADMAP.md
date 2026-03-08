@@ -30,7 +30,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 2 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Store foundation: atomic move operations, persist migration, dead code cleanup
+- [x] 01-01-PLAN.md — Store foundation: atomic move operations, persist migration, dead code cleanup
 - [ ] 01-02-PLAN.md — UI fixes: category-aware TagItem click/styling, CategoryGroup red title, WorkspaceTag visible move buttons
 
 ### Phase 2: 中文化与结构改进
@@ -71,6 +71,6 @@ Phases execute in numeric order: 1 -> 2 -> 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. 交互修复 | 0/2 | Planned | - |
+| 1. 交互修复 | 1/2 | In Progress | - |
 | 2. 中文化与结构改进 | 0/? | Not started | - |
 | 3. 视觉打磨与拖拽排序 | 0/? | Not started | - |
