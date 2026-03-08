@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 01-01-PLAN.md
-last_updated: "2026-03-08T16:43:46Z"
-last_activity: 2026-03-08 — Completed 01-01 Store foundation
+status: planning
+stopped_at: Completed 01-02-PLAN.md
+last_updated: "2026-03-08T17:19:39.902Z"
+last_activity: 2026-03-08 — Completed 01-02 UI interaction fixes
 progress:
   total_phases: 3
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
-  percent: 17
+  completed_plans: 2
+  percent: 100
 ---
 
 # Project State
@@ -21,35 +21,36 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-08)
 
 **Core value:** 让中文用户能够直观、快速地组合和管理文生图提示词
-**Current focus:** Phase 1: 交互修复
+**Current focus:** Phase 2: 中文化与结构改进
 
 ## Current Position
 
-Phase: 1 of 3 (交互修复)
-Plan: 1 of 2 in current phase
-Status: Plan 01-01 complete, ready for 01-02
-Last activity: 2026-03-08 — Completed 01-01 Store foundation
+Phase: 2 of 3 (中文化与结构改进)
+Plan: 0 of ? in current phase
+Status: Phase 1 complete, ready for Phase 2 planning
+Last activity: 2026-03-08 — Completed 01-02 UI interaction fixes
 
-Progress: [##░░░░░░░░] 17%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
-- Average duration: 5 min
-- Total execution time: 0.08 hours
+- Total plans completed: 2
+- Average duration: 16 min
+- Total execution time: 0.53 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-interaction-fix | 1/2 | 5min | 5min |
+| 01-interaction-fix | 2/2 | 32min | 16min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01(5min)
-- Trend: baseline
+- Last 5 plans: 01-01(5min), 01-02(27min)
+- Trend: steady
 
 *Updated after each plan completion*
+- Phase 01-interaction-fix P02 | 27min | 3 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -62,6 +63,9 @@ Recent decisions affecting current work:
 - [Roadmap]: CSS打磨与拖拽合并为一个阶段 — coarse粒度压缩
 - [01-01]: Exported migratePersistedState as named function for direct unit testing
 - [01-01]: Null-safe migration handles undefined persisted state with empty array defaults
+- [Phase 01-interaction-fix]: Negative-category UI behavior branches directly on local negative category checks in TagItem and CategoryGroup
+- [Phase 01-interaction-fix]: Workspace tag move operations now use visible hover arrow buttons and remove the context-menu move interaction
+- [01-02]: Human browser verification checkpoint approved after confirming all interaction fixes
 
 ### Pending Todos
 
@@ -73,6 +77,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T16:43:46Z
-Stopped at: Completed 01-01-PLAN.md
-Resume file: .planning/phases/01-interaction-fix/01-02-PLAN.md
+Last session: 2026-03-08T17:19:39.896Z
+Stopped at: Completed 01-02-PLAN.md
+Resume file: None

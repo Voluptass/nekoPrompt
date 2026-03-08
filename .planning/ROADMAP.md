@@ -12,7 +12,7 @@
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: 交互修复** - 修正负面标签归类逻辑，添加可见操作按钮，加固数据迁移
+- [x] **Phase 1: 交互修复** - 修正负面标签归类逻辑，添加可见操作按钮，加固数据迁移 (completed 2026-03-08)
 - [ ] **Phase 2: 中文化与结构改进** - 全界面中文化、标签中文描述、分类折叠、负面预设
 - [ ] **Phase 3: 视觉打磨与拖拽排序** - hover反馈、过渡动画、焦点环、拖拽排序
 
@@ -31,7 +31,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 01-01-PLAN.md — Store foundation: atomic move operations, persist migration, dead code cleanup
-- [ ] 01-02-PLAN.md — UI fixes: category-aware TagItem click/styling, CategoryGroup red title, WorkspaceTag visible move buttons
+- [x] 01-02-PLAN.md — UI fixes: category-aware TagItem click/styling, CategoryGroup red title, WorkspaceTag visible move buttons
 
 ### Phase 2: 中文化与结构改进
 **Goal**: 界面全部呈现为中文，标签有中文描述辅助理解，标签库分类可折叠管理，负面预设一键添加
@@ -71,6 +71,6 @@ Phases execute in numeric order: 1 -> 2 -> 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. 交互修复 | 1/2 | In Progress | - |
+| 1. 交互修复 | 2/2 | Complete   | 2026-03-08 |
 | 2. 中文化与结构改进 | 0/? | Not started | - |
 | 3. 视觉打磨与拖拽排序 | 0/? | Not started | - |

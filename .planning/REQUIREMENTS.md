@@ -7,9 +7,9 @@
 
 ### 交互修复 (Interaction)
 
-- [ ] **INTR-01**: 点击"负面常用"分类的标签自动进入 Negative 区域，不进入 Positive
+- [x] **INTR-01**: 点击"负面常用"分类的标签自动进入 Negative 区域，不进入 Positive
 - [x] **INTR-02**: 工作区标签提供可见的"移至正面/负面"按钮，不依赖右键操作
-- [ ] **INTR-03**: 左侧标签库中负面分类标签有明显的视觉区分（颜色/图标/边框）
+- [x] **INTR-03**: 左侧标签库中负面分类标签有明显的视觉区分（颜色/图标/边框）
 - [x] **INTR-04**: Zustand persist 配置添加 version 和 migrate 函数，防止 store 结构变更破坏用户数据
 
 ### 中文化 (Localization)
@@ -58,9 +58,9 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INTR-01 | Phase 1 | Pending |
+| INTR-01 | Phase 1 | Complete |
 | INTR-02 | Phase 1 | Complete |
-| INTR-03 | Phase 1 | Pending |
+| INTR-03 | Phase 1 | Complete |
 | INTR-04 | Phase 1 | Complete |
 | L10N-01 | Phase 2 | Pending |
 | L10N-02 | Phase 2 | Pending |
