@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { usePromptStore } from '../usePromptStore'
+import { usePromptStore, migratePersistedState } from '../usePromptStore'
 
 describe('usePromptStore', () => {
   beforeEach(() => {
@@ -65,6 +65,89 @@ describe('usePromptStore', () => {
       expect(usePromptStore.getState().selectedTags[0].weight).toBe(2.0)
       usePromptStore.getState().setWeight('masterpiece', 0)
       expect(usePromptStore.getState().selectedTags[0].weight).toBe(0.1)
+    })
+  })
+
+  describe('atomic move operations', () => {
+    it('moveToNegative atomically moves tag from selectedTags to negativeTags', () => {
+      usePromptStore.getState().addTag('lowres')
+      usePromptStore.getState().addTag('masterpiece')
+      usePromptStore.getState().moveToNegative('lowres')
+
+      const state = usePromptStore.getState()
+      expect(state.selectedTags).toEqual([{ tagId: 'masterpiece' }])
+      expect(state.negativeTags).toEqual([{ tagId: 'lowres' }])
+    })
+
+    it('moveToNegative does not duplicate if tag already in negativeTags', () => {
+      usePromptStore.getState().addNegativeTag('lowres')
+      usePromptStore.getState().addTag('lowres')
+      usePromptStore.getState().moveToNegative('lowres')
+
+      const state = usePromptStore.getState()
+      expect(state.selectedTags).toEqual([])
+      expect(state.negativeTags).toEqual([{ tagId: 'lowres' }])
+    })
+
+    it('moveToPositive atomically moves tag from negativeTags to selectedTags', () => {
+      usePromptStore.getState().addNegativeTag('lowres')
+      usePromptStore.getState().addNegativeTag('blurry')
+      usePromptStore.getState().moveToPositive('lowres')
+
+      const state = usePromptStore.getState()
+      expect(state.negativeTags).toEqual([{ tagId: 'blurry' }])
+      expect(state.selectedTags).toEqual([{ tagId: 'lowres' }])
+    })
+
+    it('moveToPositive does not duplicate if tag already in selectedTags', () => {
+      usePromptStore.getState().addTag('lowres')
+      usePromptStore.getState().addNegativeTag('lowres')
+      usePromptStore.getState().moveToPositive('lowres')
+
+      const state = usePromptStore.getState()
+      expect(state.negativeTags).toEqual([])
+      expect(state.selectedTags).toEqual([{ tagId: 'lowres' }])
+    })
+  })
+
+  describe('persist migration', () => {
+    it('persist config has version === 1', () => {
+      // Access persist API to check version
+      const persistOptions = (usePromptStore as any).persist
+      expect(persistOptions).toBeDefined()
+      expect(persistOptions.getOptions().version).toBe(1)
+    })
+
+    it('migrate handles version 0 data with valid arrays', () => {
+      const v0Data = {
+        selectedTags: [{ tagId: 'masterpiece' }],
+        negativeTags: [{ tagId: 'lowres' }],
+        presets: [],
+      }
+      const result = migratePersistedState(v0Data, 0)
+      expect(result).toEqual({
+        selectedTags: [{ tagId: 'masterpiece' }],
+        negativeTags: [{ tagId: 'lowres' }],
+        presets: [],
+      })
+    })
+
+    it('migrate handles missing/undefined fields with safe defaults', () => {
+      const result = migratePersistedState({}, 0)
+      expect(result).toEqual({
+        selectedTags: [],
+        negativeTags: [],
+        presets: [],
+      })
+    })
+
+    it('migrate handles undefined persisted state', () => {
+      const result = migratePersistedState(undefined, 0)
+      expect(result).toEqual({
+        selectedTags: [],
+        negativeTags: [],
+        presets: [],
+      })
     })
   })
 })
