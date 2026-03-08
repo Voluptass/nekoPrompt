@@ -7,6 +7,8 @@ interface TagItemProps {
 
 export function TagItem({ tag }: TagItemProps) {
   const toggleTag = usePromptStore((s) => s.toggleTag)
+  const addNegativeTag = usePromptStore((s) => s.addNegativeTag)
+  const removeNegativeTag = usePromptStore((s) => s.removeNegativeTag)
   const isSelected = usePromptStore((s) =>
     s.selectedTags.some((t) => t.tagId === tag.id)
   )
@@ -14,17 +16,29 @@ export function TagItem({ tag }: TagItemProps) {
     s.negativeTags.some((t) => t.tagId === tag.id)
   )
 
+  const isNegativeCategory = tag.category === 'negative'
+
+  const handleClick = () => {
+    if (isNegativeCategory) {
+      isNegative ? removeNegativeTag(tag.id) : addNegativeTag(tag.id)
+    } else {
+      toggleTag(tag.id)
+    }
+  }
+
   return (
     <button
       type="button"
-      onClick={() => toggleTag(tag.id)}
+      onClick={handleClick}
       className={`
         px-2 py-0.5 rounded text-sm transition-colors cursor-pointer
         ${
-          isSelected
-            ? 'bg-violet-600 text-white'
-            : isNegative
-              ? 'bg-red-900/50 text-red-300'
+          isNegativeCategory
+            ? isNegative
+              ? 'bg-red-800/60 text-red-200'
+              : 'bg-red-900/30 text-red-400 hover:bg-red-900/50'
+            : isSelected
+              ? 'bg-violet-600 text-white'
               : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
         }
       `}

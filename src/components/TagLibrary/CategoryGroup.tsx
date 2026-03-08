@@ -12,6 +12,8 @@ export function CategoryGroup({ category, tags }: CategoryGroupProps) {
 
   if (tags.length === 0) return null
 
+  const isNegativeCategory = category.id === 'negative'
+
   return (
     <div className="border-b border-zinc-800 last:border-b-0">
       <button
@@ -20,8 +22,8 @@ export function CategoryGroup({ category, tags }: CategoryGroupProps) {
         className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-zinc-300 hover:bg-zinc-800/50 transition-colors cursor-pointer"
       >
         <span className="text-xs text-zinc-500">{expanded ? '▾' : '▸'}</span>
-        <span>{category.name}</span>
-        <span className="ml-auto text-xs text-zinc-600">{tags.length}</span>
+        <span className={isNegativeCategory ? 'text-red-400' : ''}>{category.name}</span>
+        <span className={`ml-auto text-xs ${isNegativeCategory ? 'text-red-500/70' : 'text-zinc-600'}`}>{tags.length}</span>
       </button>
       {expanded && (
         <div className="px-3 pb-2 flex flex-wrap gap-1.5">
