@@ -20,7 +20,9 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:5173/nekoPrompt/` in your browser.
+Open `http://localhost:5173/nekoPrompt/` in your browser (dev server).
+
+> `npm run preview` uses port **4173** — if `localhost` fails, try `http://127.0.0.1:4173/nekoPrompt/`
 
 ## Build & Deploy
 
