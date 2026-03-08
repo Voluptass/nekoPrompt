@@ -58,26 +58,26 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INTR-01 | — | Pending |
-| INTR-02 | — | Pending |
-| INTR-03 | — | Pending |
-| INTR-04 | — | Pending |
-| L10N-01 | — | Pending |
-| L10N-02 | — | Pending |
-| UIST-01 | — | Pending |
-| UIST-02 | — | Pending |
-| CSSP-01 | — | Pending |
-| CSSP-02 | — | Pending |
-| CSSP-03 | — | Pending |
-| CSSP-04 | — | Pending |
-| DND-01 | — | Pending |
-| DND-02 | — | Pending |
+| INTR-01 | Phase 1 | Pending |
+| INTR-02 | Phase 1 | Pending |
+| INTR-03 | Phase 1 | Pending |
+| INTR-04 | Phase 1 | Pending |
+| L10N-01 | Phase 2 | Pending |
+| L10N-02 | Phase 2 | Pending |
+| UIST-01 | Phase 2 | Pending |
+| UIST-02 | Phase 2 | Pending |
+| CSSP-01 | Phase 3 | Pending |
+| CSSP-02 | Phase 3 | Pending |
+| CSSP-03 | Phase 3 | Pending |
+| CSSP-04 | Phase 3 | Pending |
+| DND-01 | Phase 3 | Pending |
+| DND-02 | Phase 3 | Pending |
 
 **Coverage:**
 - v1 requirements: 14 total
-- Mapped to phases: 0
-- Unmapped: 14 ⚠️
+- Mapped to phases: 14
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-08*
-*Last updated: 2026-03-08 after initial definition*
+*Last updated: 2026-03-08 after roadmap creation*
