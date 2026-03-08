@@ -27,11 +27,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. 工作区每个标签旁有可见按钮可将其移至正面/负面区域，无需右键操作
   3. 左侧标签库中"负面常用"分类的标签在视觉上与正面分类标签有明显区分（颜色或边框不同）
   4. 修改 store 结构后，已有 localStorage 数据自动迁移，用户不丢失已保存的标签和预设
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
+- [ ] 01-01-PLAN.md — Store foundation: atomic move operations, persist migration, dead code cleanup
+- [ ] 01-02-PLAN.md — UI fixes: category-aware TagItem click/styling, CategoryGroup red title, WorkspaceTag visible move buttons
 
 ### Phase 2: 中文化与结构改进
 **Goal**: 界面全部呈现为中文，标签有中文描述辅助理解，标签库分类可折叠管理，负面预设一键添加
@@ -71,6 +71,6 @@ Phases execute in numeric order: 1 -> 2 -> 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. 交互修复 | 0/? | Not started | - |
+| 1. 交互修复 | 0/2 | Planned | - |
 | 2. 中文化与结构改进 | 0/? | Not started | - |
 | 3. 视觉打磨与拖拽排序 | 0/? | Not started | - |
