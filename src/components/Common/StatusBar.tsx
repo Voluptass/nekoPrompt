@@ -18,15 +18,15 @@ export function StatusBar() {
   const negativeCount = usePromptStore((s) => s.negativeTags.length)
 
   return (
-    <footer className="flex items-center gap-4 px-4 py-1.5 border-t border-zinc-800 bg-zinc-950/80 text-xs text-zinc-500">
+    <footer className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-1.5 border-t border-zinc-800 bg-zinc-950/80 text-xs text-zinc-500">
       <span>
         Selected <span className="text-zinc-300">{selectedCount}</span> tags
       </span>
-      <span className="text-zinc-700">|</span>
+      <span className="hidden text-zinc-700 sm:inline">|</span>
       <span>
         Negative <span className="text-zinc-300">{negativeCount}</span>
       </span>
-      <span className="text-zinc-700">|</span>
+      <span className="hidden text-zinc-700 sm:inline">|</span>
       <span>
         Storage <span className="text-zinc-300">{getStorageSize()}</span> / 5MB
       </span>

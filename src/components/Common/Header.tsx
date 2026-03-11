@@ -12,9 +12,18 @@ import type { UserData } from '../../types'
 interface HeaderProps {
   searchQuery: string
   onSearchChange: (query: string) => void
+  isMobileLayout?: boolean
+  onOpenTagLibrary?: () => void
+  onOpenPreview?: () => void
 }
 
-export function Header({ searchQuery, onSearchChange }: HeaderProps) {
+export function Header({
+  searchQuery,
+  onSearchChange,
+  isMobileLayout = false,
+  onOpenTagLibrary,
+  onOpenPreview,
+}: HeaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const store = usePromptStore()
 
@@ -68,36 +77,58 @@ export function Header({ searchQuery, onSearchChange }: HeaderProps) {
   }
 
   return (
-    <header className="flex items-center justify-between px-4 py-2.5 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-sm">
-      <h1 className="text-lg font-bold tracking-tight text-zinc-100">
-        neko<span className="text-violet-400">Prompt</span>
-      </h1>
+    <header className="border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-sm">
+      <div className="flex flex-col gap-3 px-4 py-2.5 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex items-center justify-between gap-3">
+          <h1 className="text-lg font-bold tracking-tight text-zinc-100">
+            neko<span className="text-violet-400">Prompt</span>
+          </h1>
+          {isMobileLayout && (
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={onOpenTagLibrary}
+                className="rounded bg-zinc-800 px-2.5 py-1.5 text-xs text-zinc-300 transition-colors hover:bg-zinc-700 hover:text-zinc-100"
+              >
+                Tags
+              </button>
+              <button
+                type="button"
+                onClick={onOpenPreview}
+                className="rounded bg-zinc-800 px-2.5 py-1.5 text-xs text-zinc-300 transition-colors hover:bg-zinc-700 hover:text-zinc-100"
+              >
+                Preview
+              </button>
+            </div>
+          )}
+        </div>
 
-      <div className="flex items-center gap-3">
-        <SearchBar value={searchQuery} onChange={onSearchChange} />
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+          <SearchBar value={searchQuery} onChange={onSearchChange} />
 
-        <div className="flex gap-1">
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            className="px-2.5 py-1.5 text-xs text-zinc-400 bg-zinc-800 rounded hover:bg-zinc-700 hover:text-zinc-200 transition-colors cursor-pointer"
-          >
-            Import
-          </button>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".json"
-            onChange={handleImport}
-            className="hidden"
-          />
-          <button
-            type="button"
-            onClick={handleExport}
-            className="px-2.5 py-1.5 text-xs text-zinc-400 bg-zinc-800 rounded hover:bg-zinc-700 hover:text-zinc-200 transition-colors cursor-pointer"
-          >
-            Export
-          </button>
+          <div className="flex gap-1">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="px-2.5 py-1.5 text-xs text-zinc-400 bg-zinc-800 rounded hover:bg-zinc-700 hover:text-zinc-200 transition-colors cursor-pointer"
+            >
+              Import
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json"
+              onChange={handleImport}
+              className="hidden"
+            />
+            <button
+              type="button"
+              onClick={handleExport}
+              className="px-2.5 py-1.5 text-xs text-zinc-400 bg-zinc-800 rounded hover:bg-zinc-700 hover:text-zinc-200 transition-colors cursor-pointer"
+            >
+              Export
+            </button>
+          </div>
         </div>
       </div>
     </header>

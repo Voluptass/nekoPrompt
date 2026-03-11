@@ -5,13 +5,13 @@ interface SearchBarProps {
 
 export function SearchBar({ value, onChange }: SearchBarProps) {
   return (
-    <div className="relative">
+    <div className="relative w-full sm:w-auto">
       <input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Search tags..."
-        className="w-48 px-3 py-1.5 pl-8 text-sm bg-zinc-800 border border-zinc-700 rounded
+        className="w-full sm:w-48 px-3 py-1.5 pl-8 text-sm bg-zinc-800 border border-zinc-700 rounded
           text-zinc-200 placeholder:text-zinc-500
           focus:outline-none focus:border-violet-500 transition-colors"
       />

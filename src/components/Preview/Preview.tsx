@@ -29,7 +29,7 @@ export function Preview() {
   }, [positiveText, negativeText])
 
   return (
-    <div className="h-full overflow-y-auto p-4 flex flex-col gap-3 border-l border-zinc-800">
+    <div className="h-full overflow-y-auto p-4 flex flex-col gap-3 lg:border-l lg:border-zinc-800">
       {/* Format toggle */}
       <div className="flex gap-1">
         <button
