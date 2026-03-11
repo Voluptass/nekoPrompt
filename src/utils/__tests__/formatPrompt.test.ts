@@ -43,6 +43,49 @@ describe('formatSD', () => {
 })
 
 describe('formatDallE', () => {
+  it('supports an illustration-style prompt variant', () => {
+    const selected: SelectedTag[] = [
+      { tagId: 'masterpiece' },
+      { tagId: '1girl' },
+      { tagId: 'long_hair' },
+      { tagId: 'classroom' },
+      { tagId: 'dramatic_lighting' },
+      { tagId: 'close_up' },
+    ]
+    const result = formatDallE(selected, findTag, 'illustration')
+    expect(result).toContain('illustration')
+    expect(result).toContain('a girl')
+    expect(result).toContain('dramatic lighting')
+  })
+
+  it('supports a photography-style prompt variant', () => {
+    const selected: SelectedTag[] = [
+      { tagId: 'masterpiece' },
+      { tagId: '1girl' },
+      { tagId: 'long_hair' },
+      { tagId: 'classroom' },
+      { tagId: 'dramatic_lighting' },
+      { tagId: 'close_up' },
+    ]
+    const result = formatDallE(selected, findTag, 'photo')
+    expect(result).toContain('photo')
+    expect(result).toContain('portrait')
+    expect(result).toContain('dramatic lighting')
+    expect(result).not.toContain('illustration')
+  })
+
+  it('produces different wording for illustration and photo styles', () => {
+    const selected: SelectedTag[] = [
+      { tagId: 'masterpiece' },
+      { tagId: '1girl' },
+      { tagId: 'long_hair' },
+      { tagId: 'classroom' },
+    ]
+    const illustration = formatDallE(selected, findTag, 'illustration')
+    const photo = formatDallE(selected, findTag, 'photo')
+    expect(illustration).not.toBe(photo)
+  })
+
   it('turns categorized tags into a natural English prompt', () => {
     const selected: SelectedTag[] = [
       { tagId: 'masterpiece' },
@@ -95,5 +138,14 @@ describe('formatDallENegative', () => {
     expect(result).toContain('lowres')
     expect(result).toContain('bad hands')
     expect(result).toContain('.')
+  })
+
+  it('uses different negative guidance for illustration and photo styles', () => {
+    const selected: SelectedTag[] = [{ tagId: 'lowres' }, { tagId: 'bad_hands' }]
+    const illustration = formatDallENegative(selected, findTag, 'illustration')
+    const photo = formatDallENegative(selected, findTag, 'photo')
+    expect(illustration).toContain('illustration')
+    expect(photo).toContain('photo')
+    expect(illustration).not.toBe(photo)
   })
 })

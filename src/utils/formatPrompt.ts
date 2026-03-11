@@ -1,6 +1,7 @@
 import type { SelectedTag, Tag } from '../types'
 
 type TagLookup = (id: string) => Tag
+export type DallEStyle = 'illustration' | 'photo'
 
 function collectTags(tags: SelectedTag[], findTag: TagLookup): Tag[] {
   return tags
@@ -125,6 +126,38 @@ function normalizeComposition(text: string): string {
   }
 }
 
+function buildDallELead(
+  style: DallEStyle,
+  subject: string,
+  quality: string[]
+): string {
+  const qualityText = quality.length ? `${joinNaturally(quality)} ` : ''
+
+  if (style === 'photo') {
+    return `Create a ${qualityText}portrait photo of ${subject}`
+  }
+
+  return `Create a ${qualityText}illustration of ${subject}`
+}
+
+function buildDallEStyleClause(style: DallEStyle, texts: string[]): string[] {
+  const normalized = uniq(texts.map(normalizeStyle))
+  if (style === 'photo') {
+    return normalized.map((text) =>
+      text === 'an anime style' ? 'anime-inspired styling' : text.replace(/ style$/, ' styling')
+    )
+  }
+  return normalized
+}
+
+function buildDallENegativeTail(style: DallEStyle): string {
+  if (style === 'photo') {
+    return 'keep the photo sharp, realistic, and naturally lit'
+  }
+
+  return 'keep the illustration clean and free of rendering artifacts'
+}
+
 export function formatSD(tags: SelectedTag[], findTag: TagLookup): string {
   return tags
     .map((st) => {
@@ -138,7 +171,11 @@ export function formatSD(tags: SelectedTag[], findTag: TagLookup): string {
     .join(', ')
 }
 
-export function formatDallE(tags: SelectedTag[], findTag: TagLookup): string {
+export function formatDallE(
+  tags: SelectedTag[],
+  findTag: TagLookup,
+  style: DallEStyle = 'illustration'
+): string {
   const resolvedTags = collectTags(tags, findTag)
   if (resolvedTags.length === 0) return ''
 
@@ -160,27 +197,29 @@ export function formatDallE(tags: SelectedTag[], findTag: TagLookup): string {
   const clothing = uniq(byCategory.clothing.map(withArticle))
   const expression = uniq(byCategory.expression.map(normalizeExpression))
   const scene = buildSceneClause(byCategory.scene)
-  const style = uniq(byCategory.style.map(normalizeStyle))
+  const styleText = buildDallEStyleClause(style, byCategory.style)
   const lighting = uniq(byCategory.lighting)
   const composition = uniq(byCategory.composition.map(normalizeComposition))
 
-  let sentence = quality.length
-    ? `Create a ${joinNaturally(quality)} image of ${subject}`
-    : `Create an image of ${subject}`
+  let sentence = buildDallELead(style, subject, quality)
 
   if (appearance.length) sentence += ` with ${joinNaturally(appearance)}`
   if (clothing.length) sentence += `, wearing ${joinNaturally(clothing)}`
   if (expression.length) sentence += `, ${joinNaturally(expression)}`
   if (scene) sentence += `, ${scene}`
-  if (style.length) sentence += `, in ${joinNaturally(style)}`
+  if (styleText.length) sentence += `, in ${joinNaturally(styleText)}`
   if (lighting.length) sentence += `, with ${joinNaturally(lighting)}`
   if (composition.length) sentence += `, ${joinNaturally(composition)}`
 
   return `${sentence}.`
 }
 
-export function formatDallENegative(tags: SelectedTag[], findTag: TagLookup): string {
+export function formatDallENegative(
+  tags: SelectedTag[],
+  findTag: TagLookup,
+  style: DallEStyle = 'illustration'
+): string {
   const texts = uniq(collectTags(tags, findTag).map((tag) => tag.text))
   if (texts.length === 0) return ''
-  return `Avoid ${joinNaturally(texts)}.`
+  return `Avoid ${joinNaturally(texts)}, and ${buildDallENegativeTail(style)}.`
 }

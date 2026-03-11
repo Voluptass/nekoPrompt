@@ -1,7 +1,12 @@
 import { useState, useCallback } from 'react'
 import { usePromptStore } from '../../stores/usePromptStore'
 import { builtinTags } from '../../data'
-import { formatSD, formatDallE, formatDallENegative } from '../../utils/formatPrompt'
+import {
+  formatSD,
+  formatDallE,
+  formatDallENegative,
+  type DallEStyle,
+} from '../../utils/formatPrompt'
 import type { Tag } from '../../types'
 
 type Format = 'sd' | 'dalle'
@@ -13,14 +18,17 @@ export function Preview() {
   const selectedTags = usePromptStore((s) => s.selectedTags)
   const negativeTags = usePromptStore((s) => s.negativeTags)
   const [format, setFormat] = useState<Format>('sd')
+  const [dallEStyle, setDallEStyle] = useState<DallEStyle>('illustration')
   const [copied, setCopied] = useState(false)
 
   const positiveText =
-    format === 'sd' ? formatSD(selectedTags, findTag) : formatDallE(selectedTags, findTag)
+    format === 'sd'
+      ? formatSD(selectedTags, findTag)
+      : formatDallE(selectedTags, findTag, dallEStyle)
   const negativeText =
     format === 'sd'
       ? formatSD(negativeTags, findTag)
-      : formatDallENegative(negativeTags, findTag)
+      : formatDallENegative(negativeTags, findTag, dallEStyle)
 
   const handleCopy = useCallback(async () => {
     const full = negativeText
@@ -60,6 +68,33 @@ export function Preview() {
           DALL·E Format
         </button>
       </div>
+
+      {format === 'dalle' && (
+        <div className="flex gap-1">
+          <button
+            type="button"
+            onClick={() => setDallEStyle('illustration')}
+            className={`px-3 py-1 text-xs rounded cursor-pointer transition-colors ${
+              dallEStyle === 'illustration'
+                ? 'bg-emerald-600 text-white'
+                : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
+            }`}
+          >
+            Illustration
+          </button>
+          <button
+            type="button"
+            onClick={() => setDallEStyle('photo')}
+            className={`px-3 py-1 text-xs rounded cursor-pointer transition-colors ${
+              dallEStyle === 'photo'
+                ? 'bg-sky-600 text-white'
+                : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
+            }`}
+          >
+            Photo
+          </button>
+        </div>
+      )}
 
       {/* Positive prompt */}
       <div className="flex-1 flex flex-col gap-1">
