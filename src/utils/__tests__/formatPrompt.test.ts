@@ -1,11 +1,22 @@
 import { describe, it, expect } from 'vitest'
-import { formatSD, formatDallE } from '../formatPrompt'
+import { formatSD, formatDallE, formatDallENegative } from '../formatPrompt'
 import type { SelectedTag, Tag } from '../../types'
 
 const mockTags: Tag[] = [
   { id: 'masterpiece', text: 'masterpiece', category: 'quality' },
+  { id: 'ultra_detailed', text: 'ultra-detailed', category: 'quality' },
   { id: '1girl', text: '1girl', category: 'character' },
   { id: 'long_hair', text: 'long hair', category: 'appearance' },
+  { id: 'blue_eyes', text: 'blue eyes', category: 'appearance' },
+  { id: 'school_uniform', text: 'school uniform', category: 'clothing' },
+  { id: 'smile', text: 'smile', category: 'expression' },
+  { id: 'classroom', text: 'classroom', category: 'scene' },
+  { id: 'night', text: 'night', category: 'scene' },
+  { id: 'anime', text: 'anime', category: 'style' },
+  { id: 'dramatic_lighting', text: 'dramatic lighting', category: 'lighting' },
+  { id: 'close_up', text: 'close-up', category: 'composition' },
+  { id: 'lowres', text: 'lowres', category: 'negative' },
+  { id: 'bad_hands', text: 'bad hands', category: 'negative' },
 ]
 
 const findTag = (id: string) => mockTags.find((t) => t.id === id)!
@@ -32,10 +43,57 @@ describe('formatSD', () => {
 })
 
 describe('formatDallE', () => {
-  it('joins tags into a natural sentence', () => {
-    const selected: SelectedTag[] = [{ tagId: 'masterpiece' }, { tagId: '1girl' }]
+  it('turns categorized tags into a natural English prompt', () => {
+    const selected: SelectedTag[] = [
+      { tagId: 'masterpiece' },
+      { tagId: 'ultra_detailed' },
+      { tagId: '1girl' },
+      { tagId: 'long_hair' },
+      { tagId: 'blue_eyes' },
+      { tagId: 'school_uniform' },
+      { tagId: 'smile' },
+      { tagId: 'classroom' },
+      { tagId: 'night' },
+      { tagId: 'anime' },
+      { tagId: 'dramatic_lighting' },
+      { tagId: 'close_up' },
+    ]
     const result = formatDallE(selected, findTag)
-    expect(result).toContain('masterpiece')
-    expect(result).toContain('1girl')
+    expect(result).toMatch(/^Create a/)
+    expect(result).toContain('high-quality')
+    expect(result).toContain('highly detailed')
+    expect(result).toContain('a girl')
+    expect(result).toContain('long hair and blue eyes')
+    expect(result).toContain('wearing a school uniform')
+    expect(result).toContain('smiling')
+    expect(result).toContain('in a classroom at night')
+    expect(result).toContain('anime style')
+    expect(result).toContain('dramatic lighting')
+    expect(result).toContain('close-up')
+    expect(result).not.toContain('1girl')
+    expect(result).toContain('.')
+  })
+
+  it('ignores SD-style weight syntax and keeps natural language readable', () => {
+    const selected: SelectedTag[] = [
+      { tagId: 'masterpiece', weight: 1.4 },
+      { tagId: 'long_hair', weight: 1.2 },
+    ]
+    const result = formatDallE(selected, findTag)
+    expect(result).toContain('high-quality')
+    expect(result).toContain('long hair')
+    expect(result).not.toContain('(')
+    expect(result).not.toContain(':1.2')
+  })
+})
+
+describe('formatDallENegative', () => {
+  it('formats negative tags as avoidance guidance', () => {
+    const selected: SelectedTag[] = [{ tagId: 'lowres' }, { tagId: 'bad_hands' }]
+    const result = formatDallENegative(selected, findTag)
+    expect(result).toMatch(/^Avoid /)
+    expect(result).toContain('lowres')
+    expect(result).toContain('bad hands')
+    expect(result).toContain('.')
   })
 })

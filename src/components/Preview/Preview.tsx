@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import { usePromptStore } from '../../stores/usePromptStore'
 import { builtinTags } from '../../data'
-import { formatSD, formatDallE } from '../../utils/formatPrompt'
+import { formatSD, formatDallE, formatDallENegative } from '../../utils/formatPrompt'
 import type { Tag } from '../../types'
 
 type Format = 'sd' | 'dalle'
@@ -15,18 +15,23 @@ export function Preview() {
   const [format, setFormat] = useState<Format>('sd')
   const [copied, setCopied] = useState(false)
 
-  const formatter = format === 'sd' ? formatSD : formatDallE
-  const positiveText = formatter(selectedTags, findTag)
-  const negativeText = formatter(negativeTags, findTag)
+  const positiveText =
+    format === 'sd' ? formatSD(selectedTags, findTag) : formatDallE(selectedTags, findTag)
+  const negativeText =
+    format === 'sd'
+      ? formatSD(negativeTags, findTag)
+      : formatDallENegative(negativeTags, findTag)
 
   const handleCopy = useCallback(async () => {
     const full = negativeText
-      ? `${positiveText}\n\nNegative prompt: ${negativeText}`
+      ? format === 'sd'
+        ? `${positiveText}\n\nNegative prompt: ${negativeText}`
+        : `${positiveText}\n\n${negativeText}`
       : positiveText
     await navigator.clipboard.writeText(full)
     setCopied(true)
     setTimeout(() => setCopied(false), 1500)
-  }, [positiveText, negativeText])
+  }, [format, positiveText, negativeText])
 
   return (
     <div className="h-full overflow-y-auto p-4 flex flex-col gap-3 lg:border-l lg:border-zinc-800">
