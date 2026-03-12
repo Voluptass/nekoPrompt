@@ -1,14 +1,110 @@
 import { useState } from 'react'
 import { usePromptStore } from '../../stores/usePromptStore'
+import { builtinTags } from '../../data'
+import { useMobileLayout } from '../../hooks/useMobileLayout'
 import { WorkspaceTag } from './WorkspaceTag'
+
+interface ActiveTagActions {
+  tagId: string
+  isNegative: boolean
+  weight?: number
+}
+
+interface MobileTagActionSheetProps {
+  activeTag: ActiveTagActions
+  onClose: () => void
+  onDecreaseWeight: () => void
+  onIncreaseWeight: () => void
+  onMove: () => void
+}
+
+function MobileTagActionSheet({
+  activeTag,
+  onClose,
+  onDecreaseWeight,
+  onIncreaseWeight,
+  onMove,
+}: MobileTagActionSheetProps) {
+  const tag = builtinTags.find((item) => item.id === activeTag.tagId)
+
+  return (
+    <div className="fixed inset-0 z-40 lg:hidden">
+      <button
+        type="button"
+        aria-label="Dismiss tag actions"
+        onClick={onClose}
+        className="absolute inset-0 bg-black/70"
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Tag actions"
+        className="absolute inset-x-0 bottom-0 rounded-t-3xl border-t border-zinc-800 bg-zinc-950 px-4 pb-5 pt-3 shadow-2xl"
+      >
+        <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-zinc-700" />
+        <div className="mb-4 flex items-start justify-between gap-3">
+          <div>
+            <p className="text-sm font-semibold text-zinc-100">{tag?.text ?? activeTag.tagId}</p>
+            {!activeTag.isNegative && (
+              <p className="text-xs text-zinc-400">Weight {(activeTag.weight ?? 1).toFixed(1)}</p>
+            )}
+          </div>
+          <button
+            type="button"
+            aria-label="Close tag actions"
+            onClick={onClose}
+            className="rounded bg-zinc-800 px-2.5 py-1 text-xs text-zinc-300 transition-colors hover:bg-zinc-700"
+          >
+            Close
+          </button>
+        </div>
+        <div className="grid gap-2">
+          {!activeTag.isNegative && (
+            <>
+              <button
+                type="button"
+                aria-label="Decrease weight"
+                onClick={onDecreaseWeight}
+                className="rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-3 text-left text-sm text-zinc-100 transition-colors hover:bg-zinc-800"
+              >
+                -0.1
+              </button>
+              <button
+                type="button"
+                aria-label="Increase weight"
+                onClick={onIncreaseWeight}
+                className="rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-3 text-left text-sm text-zinc-100 transition-colors hover:bg-zinc-800"
+              >
+                +0.1
+              </button>
+            </>
+          )}
+          <button
+            type="button"
+            aria-label={activeTag.isNegative ? 'Move to Positive' : 'Move to Negative'}
+            onClick={onMove}
+            className="rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-3 text-left text-sm text-zinc-100 transition-colors hover:bg-zinc-800"
+          >
+            {activeTag.isNegative ? 'Move to Positive' : 'Move to Negative'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export function Workspace() {
   const selectedTags = usePromptStore((s) => s.selectedTags)
   const negativeTags = usePromptStore((s) => s.negativeTags)
   const clearAll = usePromptStore((s) => s.clearAll)
   const savePreset = usePromptStore((s) => s.savePreset)
+  const setWeight = usePromptStore((s) => s.setWeight)
+  const moveToNegative = usePromptStore((s) => s.moveToNegative)
+  const moveToPositive = usePromptStore((s) => s.moveToPositive)
+  const isMobileLayout = useMobileLayout()
   const [showSaveDialog, setShowSaveDialog] = useState(false)
   const [presetName, setPresetName] = useState('')
+  const [activeTag, setActiveTag] = useState<ActiveTagActions | null>(null)
 
   const isEmpty = selectedTags.length === 0 && negativeTags.length === 0
 
@@ -20,10 +116,42 @@ export function Workspace() {
     setShowSaveDialog(false)
   }
 
+  const openTagActions = (tagId: string, weight: number | undefined, isNegative: boolean) => {
+    if (!isMobileLayout) return
+    setActiveTag({ tagId, weight, isNegative })
+  }
+
+  const handleDecreaseWeight = () => {
+    if (!activeTag || activeTag.isNegative) return
+    const nextWeight = Math.max(0.1, Math.round(((activeTag.weight ?? 1) - 0.1) * 10) / 10)
+    setWeight(activeTag.tagId, nextWeight)
+    setActiveTag({ ...activeTag, weight: nextWeight })
+  }
+
+  const handleIncreaseWeight = () => {
+    if (!activeTag || activeTag.isNegative) return
+    const nextWeight = Math.min(2, Math.round(((activeTag.weight ?? 1) + 0.1) * 10) / 10)
+    setWeight(activeTag.tagId, nextWeight)
+    setActiveTag({ ...activeTag, weight: nextWeight })
+  }
+
+  const handleMove = () => {
+    if (!activeTag) return
+
+    if (activeTag.isNegative) {
+      moveToPositive(activeTag.tagId)
+      setActiveTag(null)
+      return
+    }
+
+    moveToNegative(activeTag.tagId)
+    setActiveTag(null)
+  }
+
   return (
     <div className="h-full overflow-y-auto p-4 flex flex-col gap-4">
       {/* Positive tags */}
-      <section className="flex-1">
+      <section aria-label="Positive tags section" className="flex-1">
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-sm font-medium text-zinc-400">Positive Tags</h2>
           {!isEmpty && (
@@ -43,7 +171,12 @@ export function Workspace() {
         ) : (
           <div className="flex flex-wrap gap-1.5">
             {selectedTags.map((st) => (
-              <WorkspaceTag key={st.tagId} tagId={st.tagId} weight={st.weight} />
+              <WorkspaceTag
+                key={st.tagId}
+                tagId={st.tagId}
+                weight={st.weight}
+                onActivate={() => openTagActions(st.tagId, st.weight, false)}
+              />
             ))}
           </div>
         )}
@@ -57,7 +190,7 @@ export function Workspace() {
       </div>
 
       {/* Negative tags */}
-      <section>
+      <section aria-label="Negative tags section">
         {negativeTags.length === 0 ? (
           <p className="text-sm text-zinc-600 italic">
             Right-click tags to move them here
@@ -70,6 +203,7 @@ export function Workspace() {
                 tagId={st.tagId}
                 weight={st.weight}
                 isNegative
+                onActivate={() => openTagActions(st.tagId, st.weight, true)}
               />
             ))}
           </div>
@@ -120,6 +254,15 @@ export function Workspace() {
             </button>
           )}
         </div>
+      )}
+      {isMobileLayout && activeTag && (
+        <MobileTagActionSheet
+          activeTag={activeTag}
+          onClose={() => setActiveTag(null)}
+          onDecreaseWeight={handleDecreaseWeight}
+          onIncreaseWeight={handleIncreaseWeight}
+          onMove={handleMove}
+        />
       )}
     </div>
   )

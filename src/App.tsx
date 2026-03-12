@@ -4,33 +4,9 @@ import { Header, StatusBar } from './components/Common'
 import { TagLibrary } from './components/TagLibrary'
 import { Workspace } from './components/Workspace'
 import { Preview } from './components/Preview'
+import { useMobileLayout } from './hooks/useMobileLayout'
 
 type ActiveDrawer = 'tags' | 'preview' | null
-
-function useMobileLayout() {
-  const getMatches = () =>
-    typeof window !== 'undefined' && window.matchMedia('(max-width: 1023px)').matches
-
-  const [isMobileLayout, setIsMobileLayout] = useState(getMatches)
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-
-    const mediaQuery = window.matchMedia('(max-width: 1023px)')
-    const syncLayout = () => setIsMobileLayout(mediaQuery.matches)
-    syncLayout()
-
-    if (typeof mediaQuery.addEventListener === 'function') {
-      mediaQuery.addEventListener('change', syncLayout)
-      return () => mediaQuery.removeEventListener('change', syncLayout)
-    }
-
-    mediaQuery.addListener(syncLayout)
-    return () => mediaQuery.removeListener(syncLayout)
-  }, [])
-
-  return isMobileLayout
-}
 
 interface MobileDrawerProps {
   children: ReactNode
