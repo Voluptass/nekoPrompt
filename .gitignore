@@ -5,3 +5,5 @@ dist
 .ace-tool/
 .claude/
 .worktrees/
+/.serena
+/.superpowers
