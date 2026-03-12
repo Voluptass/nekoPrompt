@@ -190,6 +190,21 @@ export function formatDallE(
     lighting: resolvedTags.filter((tag) => tag.category === 'lighting').map((tag) => tag.text),
     composition: resolvedTags.filter((tag) => tag.category === 'composition').map((tag) => tag.text),
   }
+  const knownCategories = new Set([
+    'quality',
+    'character',
+    'appearance',
+    'clothing',
+    'expression',
+    'scene',
+    'style',
+    'lighting',
+    'composition',
+    'negative',
+  ])
+  const misc = uniq(
+    resolvedTags.filter((tag) => !knownCategories.has(tag.category)).map((tag) => tag.text)
+  )
 
   const quality = uniq(byCategory.quality.map(normalizeQuality))
   const subject = joinNaturally(uniq(byCategory.character.map(normalizeCharacter))) || 'a subject'
@@ -210,6 +225,7 @@ export function formatDallE(
   if (styleText.length) sentence += `, in ${joinNaturally(styleText)}`
   if (lighting.length) sentence += `, with ${joinNaturally(lighting)}`
   if (composition.length) sentence += `, ${joinNaturally(composition)}`
+  if (misc.length) sentence += `, with ${joinNaturally(misc)}`
 
   return `${sentence}.`
 }

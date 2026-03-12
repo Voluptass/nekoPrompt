@@ -15,6 +15,7 @@ const mockTags: Tag[] = [
   { id: 'anime', text: 'anime', category: 'style' },
   { id: 'dramatic_lighting', text: 'dramatic lighting', category: 'lighting' },
   { id: 'close_up', text: 'close-up', category: 'composition' },
+  { id: 'cyberpunk_city', text: 'cyberpunk city', category: 'custom-cat-scene' },
   { id: 'lowres', text: 'lowres', category: 'negative' },
   { id: 'bad_hands', text: 'bad hands', category: 'negative' },
 ]
@@ -127,6 +128,14 @@ describe('formatDallE', () => {
     expect(result).toContain('long hair')
     expect(result).not.toContain('(')
     expect(result).not.toContain(':1.2')
+  })
+
+  it('appends uncategorized custom tags at the end of the sentence', () => {
+    const selected: SelectedTag[] = [{ tagId: '1girl' }, { tagId: 'cyberpunk_city' }]
+    const result = formatDallE(selected, findTag)
+
+    expect(result).toContain('a girl')
+    expect(result).toContain('with cyberpunk city')
   })
 })
 
