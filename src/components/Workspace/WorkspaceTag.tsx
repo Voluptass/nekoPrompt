@@ -1,5 +1,5 @@
+import { useFindTag } from '../../hooks/useAllTags'
 import { usePromptStore } from '../../stores/usePromptStore'
-import { builtinTags } from '../../data'
 
 interface WorkspaceTagProps {
   tagId: string
@@ -19,9 +19,9 @@ export function WorkspaceTag({
   const setWeight = usePromptStore((s) => s.setWeight)
   const moveToNegative = usePromptStore((s) => s.moveToNegative)
   const moveToPositive = usePromptStore((s) => s.moveToPositive)
+  const findTag = useFindTag()
 
-  const tag = builtinTags.find((t) => t.id === tagId)
-  if (!tag) return null
+  const tag = findTag(tagId)
 
   const displayWeight = weight && weight !== 1.0
   const remove = isNegative ? removeNegativeTag : removeTag

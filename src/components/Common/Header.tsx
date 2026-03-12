@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { SearchBar } from './SearchBar'
+import { useCustomTagStore } from '../../stores/useCustomTagStore'
 import { usePromptStore } from '../../stores/usePromptStore'
 import {
   exportUserData,
@@ -28,10 +29,11 @@ export function Header({
   const store = usePromptStore()
 
   const handleExport = () => {
+    const { customTags, customCategories } = useCustomTagStore.getState()
     const data: UserData = {
       version: 1,
-      customTags: [],
-      customCategories: [],
+      customTags,
+      customCategories,
       hiddenBuiltinTags: [],
       presets: store.presets,
       settings: { defaultPlatform: 'sd' },
@@ -53,6 +55,11 @@ export function Header({
 
     // Merge presets from imported data
     const imported = result.data
+    useCustomTagStore.setState({
+      customTags: imported.customTags,
+      customCategories: imported.customCategories,
+    })
+
     if (imported.presets?.length) {
       for (const preset of imported.presets) {
         store.savePreset(preset.name)

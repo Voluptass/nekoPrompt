@@ -1,3 +1,5 @@
 export { Header } from './Header'
+export { CreateTagModal } from './CreateTagModal'
+export { ManageModal } from './ManageModal'
 export { SearchBar } from './SearchBar'
 export { StatusBar } from './StatusBar'

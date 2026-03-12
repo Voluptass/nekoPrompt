@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { usePromptStore } from '../../stores/usePromptStore'
-import { builtinTags } from '../../data'
+import { useFindTag } from '../../hooks/useAllTags'
 import { useMobileLayout } from '../../hooks/useMobileLayout'
+import { usePromptStore } from '../../stores/usePromptStore'
 import { WorkspaceTag } from './WorkspaceTag'
 
 interface ActiveTagActions {
@@ -12,6 +12,7 @@ interface ActiveTagActions {
 
 interface MobileTagActionSheetProps {
   activeTag: ActiveTagActions
+  tagText: string
   onClose: () => void
   onDecreaseWeight: () => void
   onIncreaseWeight: () => void
@@ -20,13 +21,12 @@ interface MobileTagActionSheetProps {
 
 function MobileTagActionSheet({
   activeTag,
+  tagText,
   onClose,
   onDecreaseWeight,
   onIncreaseWeight,
   onMove,
 }: MobileTagActionSheetProps) {
-  const tag = builtinTags.find((item) => item.id === activeTag.tagId)
-
   return (
     <div className="fixed inset-0 z-40 lg:hidden">
       <button
@@ -44,7 +44,7 @@ function MobileTagActionSheet({
         <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-zinc-700" />
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>
-            <p className="text-sm font-semibold text-zinc-100">{tag?.text ?? activeTag.tagId}</p>
+            <p className="text-sm font-semibold text-zinc-100">{tagText}</p>
             {!activeTag.isNegative && (
               <p className="text-xs text-zinc-400">Weight {(activeTag.weight ?? 1).toFixed(1)}</p>
             )}
@@ -101,6 +101,7 @@ export function Workspace() {
   const setWeight = usePromptStore((s) => s.setWeight)
   const moveToNegative = usePromptStore((s) => s.moveToNegative)
   const moveToPositive = usePromptStore((s) => s.moveToPositive)
+  const findTag = useFindTag()
   const isMobileLayout = useMobileLayout()
   const [showSaveDialog, setShowSaveDialog] = useState(false)
   const [presetName, setPresetName] = useState('')
@@ -258,6 +259,7 @@ export function Workspace() {
       {isMobileLayout && activeTag && (
         <MobileTagActionSheet
           activeTag={activeTag}
+          tagText={findTag(activeTag.tagId).text}
           onClose={() => setActiveTag(null)}
           onDecreaseWeight={handleDecreaseWeight}
           onIncreaseWeight={handleIncreaseWeight}

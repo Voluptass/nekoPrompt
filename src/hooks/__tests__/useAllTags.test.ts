@@ -21,7 +21,7 @@ describe('useAllTags hooks', () => {
     const { result } = renderHook(() => useAllTags())
 
     expect(result.current).toHaveLength(builtinTags.length + 1)
-    expect(result.current.at(-1)).toEqual({
+    expect(result.current[result.current.length - 1]).toEqual({
       id: 'custom-tag-1',
       text: 'cyberpunk city',
       category: 'custom-cat-1',

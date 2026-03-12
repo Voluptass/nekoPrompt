@@ -1,22 +1,19 @@
 import { useState, useCallback } from 'react'
-import { usePromptStore } from '../../stores/usePromptStore'
-import { builtinTags } from '../../data'
+import { useFindTag } from '../../hooks/useAllTags'
 import {
   formatSD,
   formatDallE,
   formatDallENegative,
   type DallEStyle,
 } from '../../utils/formatPrompt'
-import type { Tag } from '../../types'
+import { usePromptStore } from '../../stores/usePromptStore'
 
 type Format = 'sd' | 'dalle'
-
-const findTag = (id: string): Tag =>
-  builtinTags.find((t) => t.id === id) ?? { id, text: id, category: '' }
 
 export function Preview() {
   const selectedTags = usePromptStore((s) => s.selectedTags)
   const negativeTags = usePromptStore((s) => s.negativeTags)
+  const findTag = useFindTag()
   const [format, setFormat] = useState<Format>('sd')
   const [dallEStyle, setDallEStyle] = useState<DallEStyle>('illustration')
   const [copied, setCopied] = useState(false)

@@ -13,6 +13,7 @@ export function CategoryGroup({ category, tags }: CategoryGroupProps) {
   if (tags.length === 0) return null
 
   const isNegativeCategory = category.id === 'negative'
+  const isCustomCategory = category.id.startsWith('custom-cat-')
 
   return (
     <div className="border-b border-zinc-800 last:border-b-0">
@@ -23,6 +24,9 @@ export function CategoryGroup({ category, tags }: CategoryGroupProps) {
       >
         <span className="text-xs text-zinc-500">{expanded ? '▾' : '▸'}</span>
         <span className={isNegativeCategory ? 'text-red-400' : ''}>{category.name}</span>
+        {isCustomCategory && (
+          <span className="rounded bg-violet-950 px-1.5 text-[9px] text-violet-400">自定义</span>
+        )}
         <span className={`ml-auto text-xs ${isNegativeCategory ? 'text-red-500/70' : 'text-zinc-600'}`}>{tags.length}</span>
       </button>
       {expanded && (

@@ -17,6 +17,7 @@ export function TagItem({ tag }: TagItemProps) {
   )
 
   const isNegativeCategory = tag.category === 'negative'
+  const isCustomTag = tag.id.startsWith('custom-')
 
   const handleClick = () => {
     if (isNegativeCategory) {
@@ -39,12 +40,15 @@ export function TagItem({ tag }: TagItemProps) {
               : 'bg-red-900/30 text-red-400 hover:bg-red-900/50'
             : isSelected
               ? 'bg-violet-600 text-white'
-              : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+              : isCustomTag
+                ? 'border border-violet-700 bg-gradient-to-r from-zinc-800 to-violet-950/30 text-violet-300 hover:from-zinc-700 hover:to-violet-900/40'
+                : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
         }
       `}
       title={tag.description || tag.text}
     >
       {tag.text}
+      {isCustomTag ? ' ✦' : ''}
     </button>
   )
 }
