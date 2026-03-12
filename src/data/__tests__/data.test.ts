@@ -21,6 +21,27 @@ describe('builtin data', () => {
     }
   })
 
+  it('includes representative common SD tags in the built-in library', () => {
+    const expected = [
+      ['2girls', 'character'],
+      ['silver hair', 'appearance'],
+      ['hair ornament', 'appearance'],
+      ['jacket', 'clothing'],
+      ['happy', 'expression'],
+      ['street', 'scene'],
+      ['detailed eyes', 'style'],
+      ['volumetric lighting', 'lighting'],
+      ['cowboy shot', 'composition'],
+      ['extra fingers', 'negative'],
+    ] as const
+
+    for (const [text, category] of expected) {
+      expect(builtinTags).toContainEqual(
+        expect.objectContaining({ text, category })
+      )
+    }
+  })
+
   it('categories are ordered', () => {
     for (let i = 1; i < builtinCategories.length; i++) {
       expect(builtinCategories[i].order).toBeGreaterThanOrEqual(

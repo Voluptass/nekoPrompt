@@ -4,7 +4,7 @@ A browser-based text-to-image prompt manager. Click tags to compose prompts, adj
 
 ## Features
 
-- **Tag Library** — 97 built-in tags across 10 categories (quality, character, appearance, clothing, expression, scene, style, lighting, composition, negative)
+- **Tag Library** — 133 built-in tags across 10 categories (quality, character, appearance, clothing, expression, scene, style, lighting, composition, negative)
 - **Click-to-Compose** — Click tags to add, right-click to move between positive/negative
 - **Weight Control** — Adjust tag weight (0.1–2.0) with +/− buttons
 - **Format Output** — Switch between SD `(tag:weight)` and DALL·E natural language formats
