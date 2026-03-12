@@ -102,7 +102,14 @@ describe('Workspace mobile actions', () => {
   it('renders custom tags in the workspace and mobile action sheet', async () => {
     mockViewport(true)
     useCustomTagStore.setState({
-      customTags: [{ id: 'custom-tag-1', text: 'cyberpunk city', category: 'custom-cat-1' }],
+      customTags: [
+        {
+          id: 'custom-tag-1',
+          text: 'cyberpunk city',
+          translation: '赛博朋克城市',
+          category: 'custom-cat-1',
+        },
+      ],
       customCategories: [{ id: 'custom-cat-1', name: 'Custom Scenes', order: 100 }],
     })
     usePromptStore.setState({
@@ -119,5 +126,6 @@ describe('Workspace mobile actions', () => {
     const dialog = screen.getByRole('dialog', { name: 'Tag actions' })
     expect(dialog).toBeInTheDocument()
     expect(within(dialog).getByText('cyberpunk city')).toBeInTheDocument()
+    expect(within(dialog).getByText('赛博朋克城市')).toBeInTheDocument()
   })
 })

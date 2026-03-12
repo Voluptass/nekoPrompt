@@ -20,6 +20,7 @@ describe('TagLibrary custom tags', () => {
         {
           id: 'custom-tag-1',
           text: 'cyberpunk city',
+          translation: '赛博朋克城市',
           category: 'custom-cat-1',
           aliases: ['neon skyline'],
         },
@@ -27,13 +28,14 @@ describe('TagLibrary custom tags', () => {
       customCategories: [{ id: 'custom-cat-1', name: 'Custom Scenes', order: 100 }],
     })
 
-    render(<TagLibrary searchQuery="neon" />)
+    render(<TagLibrary searchQuery="赛博" />)
 
     await user.click(screen.getByRole('button', { name: /Custom Scenes/ }))
 
-    const tagButton = screen.getByRole('button', { name: 'cyberpunk city ✦' })
+    const tagButton = screen.getByRole('button', { name: /cyberpunk city/ })
     expect(tagButton).toHaveClass('border-violet-700')
     expect(tagButton).toHaveClass('text-violet-300')
+    expect(within(tagButton).getByText('赛博朋克城市')).toBeInTheDocument()
   })
 
   it('shows a custom badge for custom categories', () => {
@@ -56,6 +58,7 @@ describe('TagLibrary custom tags', () => {
 
     const dialog = screen.getByRole('dialog', { name: '新建标签' })
     await user.type(within(dialog).getByLabelText('标签文本'), 'cyberpunk city')
+    await user.type(within(dialog).getByLabelText('汉语翻译'), '赛博朋克城市')
     await user.selectOptions(within(dialog).getByLabelText('分类'), '__new__')
     await user.type(within(dialog).getByLabelText('新分类名称'), '夜景灵感')
     await user.click(within(dialog).getByRole('button', { name: '创建' }))
@@ -64,9 +67,35 @@ describe('TagLibrary custom tags', () => {
       expect.objectContaining({ name: '夜景灵感' }),
     ])
     expect(useCustomTagStore.getState().customTags).toEqual([
-      expect.objectContaining({ text: 'cyberpunk city' }),
+      expect.objectContaining({
+        text: 'cyberpunk city',
+        translation: '赛博朋克城市',
+      }),
     ])
     expect(screen.getByRole('button', { name: /夜景灵感/ })).toBeInTheDocument()
+  })
+
+  it('shows translation metadata for custom tags in the manage modal', async () => {
+    const user = userEvent.setup()
+
+    useCustomTagStore.setState({
+      customTags: [
+        {
+          id: 'custom-tag-1',
+          text: 'cyberpunk city',
+          translation: '赛博朋克城市',
+          category: 'custom-cat-1',
+        },
+      ],
+      customCategories: [{ id: 'custom-cat-1', name: 'Custom Scenes', order: 100 }],
+    })
+
+    render(<TagLibrary />)
+
+    await user.click(screen.getByRole('button', { name: '管理' }))
+
+    const dialog = screen.getByRole('dialog', { name: '管理自定义标签' })
+    expect(within(dialog).getByText('赛博朋克城市')).toBeInTheDocument()
   })
 
   it('deletes a custom tag from the manage modal', async () => {

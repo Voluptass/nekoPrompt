@@ -4,6 +4,7 @@ export interface Tag {
   id: string
   text: string
   category: string
+  translation?: string
   aliases?: string[]
   description?: string
   platforms?: Platform[]

@@ -27,12 +27,14 @@ export function TagItem({ tag }: TagItemProps) {
     }
   }
 
+  const title = [tag.translation, tag.text, tag.description].filter(Boolean).join(' · ')
+
   return (
     <button
       type="button"
       onClick={handleClick}
       className={`
-        px-2 py-0.5 rounded text-sm transition-colors cursor-pointer
+        inline-flex items-start px-2 py-1 rounded text-sm text-left transition-colors cursor-pointer
         ${
           isNegativeCategory
             ? isNegative
@@ -45,10 +47,17 @@ export function TagItem({ tag }: TagItemProps) {
                 : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
         }
       `}
-      title={tag.description || tag.text}
+      title={title}
     >
-      {tag.text}
-      {isCustomTag ? ' ✦' : ''}
+      <span className="flex flex-col items-start leading-tight">
+        <span>
+          {tag.text}
+          {isCustomTag ? ' ✦' : ''}
+        </span>
+        {tag.translation && (
+          <span className="text-[10px] opacity-80">{tag.translation}</span>
+        )}
+      </span>
     </button>
   )
 }

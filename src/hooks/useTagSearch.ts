@@ -6,6 +6,7 @@ export function filterTags(tags: Tag[], query: string): Tag[] {
   return tags.filter(
     (t) =>
       t.text.toLowerCase().includes(q) ||
+      t.translation?.toLowerCase().includes(q) ||
       t.aliases?.some((a) => a.toLowerCase().includes(q))
   )
 }

@@ -4,7 +4,7 @@ import type { Tag } from '../../types'
 
 const tags: Tag[] = [
   { id: '1', text: '1girl', category: 'c', aliases: ['one girl'] },
-  { id: '2', text: 'blue eyes', category: 'c' },
+  { id: '2', text: 'blue eyes', translation: '蓝色眼睛', category: 'c' },
 ]
 
 describe('filterTags', () => {
@@ -22,5 +22,9 @@ describe('filterTags', () => {
 
   it('is case insensitive', () => {
     expect(filterTags(tags, 'BLUE')).toHaveLength(1)
+  })
+
+  it('matches by translation', () => {
+    expect(filterTags(tags, '蓝色')).toHaveLength(1)
   })
 })

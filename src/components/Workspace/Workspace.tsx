@@ -13,6 +13,7 @@ interface ActiveTagActions {
 interface MobileTagActionSheetProps {
   activeTag: ActiveTagActions
   tagText: string
+  tagTranslation?: string
   onClose: () => void
   onDecreaseWeight: () => void
   onIncreaseWeight: () => void
@@ -22,6 +23,7 @@ interface MobileTagActionSheetProps {
 function MobileTagActionSheet({
   activeTag,
   tagText,
+  tagTranslation,
   onClose,
   onDecreaseWeight,
   onIncreaseWeight,
@@ -45,6 +47,9 @@ function MobileTagActionSheet({
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>
             <p className="text-sm font-semibold text-zinc-100">{tagText}</p>
+            {tagTranslation && (
+              <p className="text-xs text-zinc-400">{tagTranslation}</p>
+            )}
             {!activeTag.isNegative && (
               <p className="text-xs text-zinc-400">Weight {(activeTag.weight ?? 1).toFixed(1)}</p>
             )}
@@ -148,6 +153,8 @@ export function Workspace() {
     moveToNegative(activeTag.tagId)
     setActiveTag(null)
   }
+
+  const activeTagDetails = activeTag ? findTag(activeTag.tagId) : null
 
   return (
     <div className="h-full overflow-y-auto p-4 flex flex-col gap-4">
@@ -256,10 +263,11 @@ export function Workspace() {
           )}
         </div>
       )}
-      {isMobileLayout && activeTag && (
+      {isMobileLayout && activeTag && activeTagDetails && (
         <MobileTagActionSheet
           activeTag={activeTag}
-          tagText={findTag(activeTag.tagId).text}
+          tagText={activeTagDetails.text}
+          tagTranslation={activeTagDetails.translation}
           onClose={() => setActiveTag(null)}
           onDecreaseWeight={handleDecreaseWeight}
           onIncreaseWeight={handleIncreaseWeight}

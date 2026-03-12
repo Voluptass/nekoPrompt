@@ -28,6 +28,7 @@ export function CreateTagModal({ open, onClose, editTag }: CreateTagModalProps) 
   const { addCustomTag, updateCustomTag, addCustomCategory } = useCustomTagStore()
   const allCategories = useAllCategories()
   const [text, setText] = useState('')
+  const [translation, setTranslation] = useState('')
   const [category, setCategory] = useState('')
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [aliases, setAliases] = useState('')
@@ -40,6 +41,7 @@ export function CreateTagModal({ open, onClose, editTag }: CreateTagModalProps) 
     if (!open) return
 
     setText(editTag?.text ?? '')
+    setTranslation(editTag?.translation ?? '')
     setCategory(editTag?.category ?? '')
     setShowAdvanced(Boolean(editTag?.aliases?.length || editTag?.description || editTag?.platforms?.length))
     setAliases(editTag?.aliases?.join(', ') ?? '')
@@ -65,6 +67,7 @@ export function CreateTagModal({ open, onClose, editTag }: CreateTagModalProps) 
 
   const handleSubmit = () => {
     const trimmedText = text.trim()
+    const trimmedTranslation = translation.trim()
     const trimmedNewCategoryName = newCategoryName.trim()
 
     if (!trimmedText) return
@@ -85,6 +88,7 @@ export function CreateTagModal({ open, onClose, editTag }: CreateTagModalProps) 
     const tagData: Omit<Tag, 'id'> = {
       text: trimmedText,
       category: categoryId,
+      ...(trimmedTranslation ? { translation: trimmedTranslation } : {}),
       ...(aliases.trim()
         ? {
             aliases: aliases
@@ -142,6 +146,19 @@ export function CreateTagModal({ open, onClose, editTag }: CreateTagModalProps) 
               value={text}
               onChange={(event) => setText(event.target.value)}
               placeholder="例如: cyberpunk city"
+              className="w-full rounded border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-zinc-100 outline-none transition-colors focus:border-violet-500"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="custom-tag-translation" className="mb-1 block text-xs text-zinc-400">
+              汉语翻译
+            </label>
+            <input
+              id="custom-tag-translation"
+              value={translation}
+              onChange={(event) => setTranslation(event.target.value)}
+              placeholder="例如: 赛博朋克城市"
               className="w-full rounded border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-zinc-100 outline-none transition-colors focus:border-violet-500"
             />
           </div>

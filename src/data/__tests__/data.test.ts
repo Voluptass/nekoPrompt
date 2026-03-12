@@ -42,6 +42,33 @@ describe('builtin data', () => {
     }
   })
 
+  it('includes representative Chinese translations for built-in tags', () => {
+    const expected = [
+      ['masterpiece', '杰作级'],
+      ['1girl', '一个女孩'],
+      ['blue eyes', '蓝色眼睛'],
+      ['school uniform', '校服'],
+      ['smile', '微笑'],
+      ['street', '街道'],
+      ['anime', '动漫风格'],
+      ['volumetric lighting', '体积光'],
+      ['cowboy shot', '牛仔镜头'],
+      ['extra fingers', '多余手指'],
+    ] as const
+
+    for (const [text, translation] of expected) {
+      expect(builtinTags).toContainEqual(
+        expect.objectContaining({ text, translation })
+      )
+    }
+  })
+
+  it('every built-in tag has a Chinese translation', () => {
+    for (const tag of builtinTags) {
+      expect(tag.translation?.trim()).toBeTruthy()
+    }
+  })
+
   it('categories are ordered', () => {
     for (let i = 1; i < builtinCategories.length; i++) {
       expect(builtinCategories[i].order).toBeGreaterThanOrEqual(

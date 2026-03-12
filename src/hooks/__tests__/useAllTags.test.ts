@@ -13,7 +13,14 @@ describe('useAllTags hooks', () => {
   it('merges builtin and custom tags', () => {
     act(() => {
       useCustomTagStore.setState({
-        customTags: [{ id: 'custom-tag-1', text: 'cyberpunk city', category: 'custom-cat-1' }],
+        customTags: [
+          {
+            id: 'custom-tag-1',
+            text: 'cyberpunk city',
+            translation: '赛博朋克城市',
+            category: 'custom-cat-1',
+          },
+        ],
         customCategories: [],
       })
     })
@@ -24,6 +31,7 @@ describe('useAllTags hooks', () => {
     expect(result.current[result.current.length - 1]).toEqual({
       id: 'custom-tag-1',
       text: 'cyberpunk city',
+      translation: '赛博朋克城市',
       category: 'custom-cat-1',
     })
   })
@@ -49,7 +57,14 @@ describe('useAllTags hooks', () => {
   it('finds custom tags and returns a fallback for unknown ids', () => {
     act(() => {
       useCustomTagStore.setState({
-        customTags: [{ id: 'custom-tag-1', text: 'cyberpunk city', category: 'custom-cat-1' }],
+        customTags: [
+          {
+            id: 'custom-tag-1',
+            text: 'cyberpunk city',
+            translation: '赛博朋克城市',
+            category: 'custom-cat-1',
+          },
+        ],
         customCategories: [],
       })
     })
@@ -59,6 +74,7 @@ describe('useAllTags hooks', () => {
     expect(result.current('custom-tag-1')).toEqual({
       id: 'custom-tag-1',
       text: 'cyberpunk city',
+      translation: '赛博朋克城市',
       category: 'custom-cat-1',
     })
     expect(result.current('missing-tag')).toEqual({
